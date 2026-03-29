@@ -4,8 +4,6 @@ from flask import BluePrint, jsonify, request
 from .. import db
 from werkzeug.security import check_password_hash, generate_password_hash
 import datetime 
-import uuid
-
 
 ## Setting up the Blue Print 
 phase_1_bp  = BluePrint('auth', __name__, url_prefix='/phase_1_bp')
@@ -194,9 +192,7 @@ def type_2_authentication():
                 #if the use exist, then extract  the uuid
                 #assume the user found is unique
                 payload["uuid"] = hashedPassWord.fetchone()[0]
-                '''
-                    Maybe also here is the place to set the is active status?
-                '''
+
                 # Give a session for the user
                 session_uuid = str(uuid.uuid4())
                 session_id  = str(uuid.uuid4())
@@ -246,14 +242,95 @@ def type_2_authentication():
 
 @phase_1_bp.post('type_2_user_signup')
 def type_2_user_signin():
+    # Connect with the database
+    database  = db.get_db()
+    payload = {
+        "login_success" : True,
+        "message" : "",
+        "uuid" :""
+    }
+    # Receive the request from the frontend 
+    data  = request.get_json()
+
+    user_name = data.get("user_name")
+    password  = data.get("password")
+    role = data.get("role")
+    gender = data.get("gender")
+    left_right_hand = data.get("hand")
+    
+    # Check if user exit in the user data base 
+    try :
+        user_res  = database.execute("SELECT * FROM users WHERE username= ? ",
+                                     (user_name,))
+        if user_res.fetchone() is None:
+            # User name is new, go a head with the user registration
+            try :
+                # Generate a hashed password
+                hashed_password = generate_password_hash(password)
+                uuid  = str(uuid.uuid4())
+                database.execute("""INSERT INTO users(id, username, password, creation_date, role, gender, left_right_handed)
+                          VALUES(?, ?, ?, ?, ?, ?, ?, ?)""",
+                (uuid, user_name, hashed_password, 
+                 datetime.datetime.now(), role, gender,left_right_hand))
+                database.commit()
+                # Also return user a session, save the session into a database 
+                session_uuid = str(uuid.uuid4())
+                session_id  = str(uuid.uuid4())
+                created_at  = str(datetime.datetime.now())
+                expire_at  = str(datetime.datetime.now()+datetime.timedelta(minutes=30))
+                try:
+                    database.execute('''
+                        INSERT INTO sessions(uuid, session_id,user_id, created_at, expires_at, isValid)
+                        VALUES(?, ?, ?, ?, ?, ?) 
+                    ''', (session_uuid, session_id, hashed_password, created_at, expire_at, 1))
+                    database.commit()
+                except Exception as e:
+                    payload["login_success"] = False
+                    payload["message"] = "Failed to create session for the new user "
+                    return  jsonify(payload), 400
+                
+                # Set the payload object
+                payload ["login_success"] = True
+                payload ["message"] = "Account created successfully"
+                payload ["uuid"] = uuid
+                # Set response, set session cookies
+                response = jsonify(payload)
+                response.set_cookie(
+                    "session_id",
+                    session_id,
+                    httponly=True,
+                    secure=True,
+                    samesite="Lax",
+                    max_age=30 * 60
+                )
+                return response, 200
+            except Exception as e:
+                payload ["login_success"] = False
+                payload ["message"] = "Account created successfully"
+                payload ["uuid"] = ""
+                return  jsonify(payload), 200 
+        else:
+            # User name already exist, return false
+            payload ["login_success"] = False
+            payload ["message"] = "Account name already exist"
+            payload ["uuid"] = ""
+            return  jsonify(payload), 200 
+    except Exception as e:
+        payload["message"] = "Failed to Create user due to unexpected error"
+        return jsonify(payload), 400 
+    
+@phase_1_bp.get('/type_3_authentication')
+def type_3_authentication():
+    return  0
+
+@phase_1_bp.get("/type_3_create_user")
+def type_3_user_creation():
     payload = {
         "login_success" : True,
         "message" : "",
         "user_session" : "",
         "uuid" :""
     }
-
+    
     return 0
-@phase_1_bp.get('/type_3_authentication')
-def type_3_authentication():
-    return  0
+
