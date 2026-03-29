@@ -1,0 +1,39 @@
+Sedding the database for archery app 
+
+table 1_users
+{uuid_1, tony_admin, test_password, '2026-02-28T14:30:05Z', 0, 0,0}
+{uuid_2, winni_test_acc, test_password_2, '2026-02-28T14:30:05Z', 0,1,0}
+{uuid_3, goblin_test_accm test_goblin, '2026-02-28T14:30:05Z', 0,0,0}
+
+table 2 bow_types
+{uuid_1, "recurve"}, {uuid_2, "english_longbow"}, {uuid_3, "barebow"}, {uuid_4 , "yumi_full_length"}
+
+table 3 userbow_types
+{uuid_1,  26, 0,afterbunner, carbon_alu, 12, 180, table_2_uuid_1, table_1_uuid_1}
+{uuid_2,  26, 0,permithies, carbon, 12, 180, table_2_uuid_1, table_1_uuid_2}
+{uuid_3,  26, 0,mylongbow, wood, 12, 180, table_2_uuid_2, table_1_uuid_1}
+{uuid_4,  26, 0,japneselongbow, wood, 12, 180, table_2_uuid_4, table_1_uuid_3}
+{uuid_5,  26, 0,alcoholicarcher, carbon_alu, 12, 180, table_2_uuid_3, table_1_uuid_2}
+{uuid_6,  26, 0,permithies_b, carbon_alu, 12, 180, table_2_uuid_3, table_1_uuid_3}
+
+table 4 round_types
+
+{uuid_1, portmouth_recurve, table_2_uuid_1, 0, 120, 20,meter,60, 20,3}
+{uuid_2, portmouth_longbow, table_2_uuid_2, 0, 120, 20,meter,60, 20,3}
+{uuid_3, portmouth_barebow, table_2_uuid_3, 0, 120, 20,meter,60, 20,3}
+
+table 5 round_recordings
+
+{uuid_1, 180, 20, 60, '2026-02-29T14:30:05Z', '2026-02-29T14:45:05Z', ''2026-02-28'', table_1_uuid_1, table_3_uuid_1 }
+
+table 6 ends_recordings
+
+{uuid_1, 1, 28, 3, '2026-02-29T14:31:05Z', table_1_uuid_1, table_5_uuid_1}
+{uuid_2, 2, 28, 3, '2026-02-29T14:31:05Z', table_1_uuid_1, table_5_uuid_1}
+
+
+table 7 arrow_recordings
+
+{uuid_1, 1, 10, table_1_uuid_1, table_5_uuid_1}
+{uuid_2, 2, 10, table_1_uuid_1, table_5_uuid_1}
+{uuid_3, 3, 8, 3,table_1_uuid_1, table_5_uuid_1}
