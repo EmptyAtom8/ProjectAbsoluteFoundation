@@ -1,0 +1,37 @@
+User Authentication and Authorization  Python SQLite
+
+
+## User Authentication with Raw Pass Word and  User Name only 
+## User Authentication with Hashed password and usename
+## User Authentication with Hashed password and usename and role checking 
+#### 
+## User Authentication with Proper session handling  (Session Based Approach)
+
+	#### Add New Schamas in the database 
+		CREATE TABLE sessions(
+			uuid TEXT  PRIMARY KEY,
+			session_id TEXT NOT NULL UNIQUE,
+			user_id TEXT NOT NULL,
+			created_at TEXT NOT NULL,
+			expires_at  TEXT NOT NULL,
+			isValid   INTEGER NOT NULL,
+			FOREIGN KEY (user_id) REFERENCES users(id)
+		)
+	#### Authentication Flow 
+	Login flo  (does not usually require any session input from user side)
+
+	1. Receive username and password
+	2. Look up user in users table
+	3. If user does not exist, return login failed
+	4. If user exists, verify submitted password against stored password hash
+	5. If password is wrong, return login failed
+	6. If password is correct:
+			6.1 create a new session ID
+			6.2 store it in the sessions table with that user
+			6.3 return success (return the seesion as  
+			6.4 usually also set the session ID in a cookie
+					this isusually done by
+					response = jsonify(payload)
+					response.set_cookie(key:, value:,max_age)
+## User Authentication with JWT (Token Based Loggin Approach) 
+

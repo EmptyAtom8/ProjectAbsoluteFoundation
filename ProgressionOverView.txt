@@ -1,0 +1,152 @@
+List of Action and Features
+Project Absolute Foundation – Backend & Full-Stack Learning Scope
+Project Goal
+
+Build a full-stack learning platform where the same standardized frontend functionality is implemented using different frontend frameworks (web and desktop), all backed by a single, well-defined backend API.
+
+The focus is on:
+
+understanding real-world backend responsibilities,
+
+learning frontend–backend contracts,
+
+practicing deployment and tooling across OSes,
+
+and incrementally adding advanced features without over-engineering.
+
+Backend Stack (Initial Phase)
+
+Language: Python 3
+
+Framework: Flask
+
+Database: SQLite (initially)
+
+Dependency Management: PDM
+
+Execution: pdm run flask …
+
+Environment: local development → LAN → VPS
+
+The backend is designed to be framework-agnostic for the frontend, accessed purely through HTTP APIs.
+
+Core Design Principles
+
+API-first development
+
+Frontend and backend communicate via a stable API contract.
+
+Backend may change internally, but the contract remains stable.
+
+Incremental complexity
+
+Start with minimal endpoints.
+
+Add features only when the frontend needs them.
+
+Single source of truth
+
+Backend owns validation, persistence, and audit logs.
+
+Frontend focuses on UX, state, and interaction.
+
+Review-driven learning
+
+You implement features first.
+
+Code is reviewed and improved iteratively.
+
+Feature Scope (Ranked: Easy → Hard)
+Phase 0 — Foundations
+
+Health check endpoint
+
+“Hello world” API for frontend connectivity testing
+
+Consistent JSON response and error format
+
+
+Phase 1 — Core CRUD (First real backend)
+	Database Creation, Seeding and Connection with the backend
+	
+	Archery score recording domain (sessions + scores)
+		1.User Login
+		2.Admin and Regular User 
+	Create / read / update / delete records
+	
+	Filtering and basic search
+		1.Searching a User (for Admin only)
+		2.Filtereing rounds base on bow type, complete status
+		3.Filtereing round base on dates 
+	Use of Testing / Unit Testing 
+	Pagination with total counts
+	Purpose:
+	Teach API contracts, frontend integration, and DB basics.
+
+Phase 2 — UX-Driven Backend Features
+
+	Complex server-side validation
+
+	Autosave drafts (long text input)
+
+	Predictable error shapes for form rendering
+
+	Backend support for client-side caching (timestamps / versions)
+
+Phase 3 — Navigation & State (Frontend-driven)
+
+	Multi-page routing
+
+	Detail views vs list views
+
+	Responsive layout basics (explicitly taught, step by step)
+
+Phase 4 — Multiuser & Security
+
+	User accounts
+
+	Login and authentication
+
+	Expiring tokens / session handling
+
+	Role-based access (user vs admin)
+
+Phase 5 — Admin & Observability
+
+	Change log / audit trail
+
+	Record who changed what and when
+
+	Admin-only log viewer modal
+
+	Toast notifications driven by backend events
+
+Phase 6 — Real-Time & Sync
+
+	Real-time updates (SSE or polling first)
+
+	Immediate list refresh when data changes
+
+	Optimistic updates with rollback on failure
+
+	Offline detection
+
+Deferred sync when connection returns
+
+Phase 7 — Files & Advanced Data Handling
+
+	File uploads
+
+	File previews
+
+	Large / resumable uploads
+
+Metadata storage
+
+Phase 8 — AI-Assisted Features
+
+	Backend endpoint for AI summaries
+
+	Frontend UI to request and display summaries
+
+	Initially mockable, later pluggable to real AI providers

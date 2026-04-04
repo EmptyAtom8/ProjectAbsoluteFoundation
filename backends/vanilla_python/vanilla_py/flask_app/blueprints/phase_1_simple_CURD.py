@@ -241,7 +241,7 @@ def type_2_authentication():
 
 
 @phase_1_bp.post('type_2_user_signup')
-def type_2_user_signin():
+def type_2_user_signup():
     # Connect with the database
     database  = db.get_db()
     payload = {
@@ -325,12 +325,48 @@ def type_3_authentication():
 
 @phase_1_bp.get("/type_3_create_user")
 def type_3_user_creation():
+
+    # The user creation does not return a token to the user when the creation is done.
     payload = {
         "login_success" : True,
         "message" : "",
-        "user_session" : "",
-        "uuid" :""
     }
+    data = request.get_json()
+    database = db.get_db()
+    user_name  =data.get("user_name")
+    user_password = data.get("password")
+    role = data.get("role")
+    gender = data.get("gender")
+    left_right_hand = data.get("hand")
+
+    # Check if user exist  
+    try:
+        user_res  = database.execute("SELECT * FROM users WHERE username= ? ",
+                                     (user_name,))
+        if user_res.fetchone() is None:
+            # User name is new, the go ahead with user creation
+
+            try:
+                # Generate a hashed password 
+                hashed_password = generate_password_hash(user_password)
+                uuid  = str(uuid.uuid4())
+                database.execute("""INSERT INTO users(id, username, password, creation_date, role, gender, left_right_handed)
+                          VALUES(?, ?, ?, ?, ?, ?, ?, ?)""",
+                (uuid, user_name, hashed_password, 
+                 datetime.datetime.now(), role, gender,left_right_hand))
+                database.commit()
+                payload["login_success"] = True
+                payload["message"] = "everything is good"
+
+                return  jsonify(payload), 200
+            except Exception as e:
+                payload["login_success"] = False
+                payload["message"] = "user creation failed"
+                return  jsonify(payload), 400
+    except Exception as e:
+        payload["login_success"] = False 
+        payload["message"] = "user creation failed"
+        return jsonify(payload), 400
     
     return 0
 
